@@ -15,6 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day3-1", "Day3-1\Day3-1.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day3-2", "Day3-2\Day3-2.csproj", "{BE89981F-E192-4D7B-BE57-5C715A62435D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA923BAF-593B-4B3A-9A84-BE650E7224F2}"
+	ProjectSection(SolutionItems) = preProject
+		Day3.txt = Day3.txt
+		Day2.txt = Day2.txt
+		Day1.txt = Day1.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
