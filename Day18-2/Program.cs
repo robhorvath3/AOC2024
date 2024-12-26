@@ -263,7 +263,6 @@ namespace Day18_2
 
         static List<bool[]> Map = new List<bool[]>();
         static List<Coord> CorruptMemory = new List<Coord>();
-        static List<Coord> VertexProcessed = new List<Coord>();
 
         static Coord MaxCoord = new Coord(70, 70);
         static Coord StartPos = new Coord(0, 0);
