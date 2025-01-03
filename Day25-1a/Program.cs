@@ -3,60 +3,45 @@ using System.Text;
 using System.Runtime.Intrinsics;
 using System.Diagnostics;
 
-namespace Day25_1
+namespace Day25_1a
 {
     internal struct Key
     {
-        public Vector256<int> Height;
+        public int[] Height;
 
-        public Key(int columns, int[] heights)
+        public Key(int[] heights)
         {
-            if (columns > 8)
+            if (heights.Length > 8)
                 throw new NotImplementedException();
 
-            Height = Vector256.Create((columns >= 1) ? heights[0] : 0,
-                                      (columns >= 2) ? heights[1] : 0,
-                                      (columns >= 3) ? heights[2] : 0,
-                                      (columns >= 4) ? heights[3] : 0,
-                                      (columns >= 5) ? heights[4] : 0,
-                                      (columns >= 6) ? heights[5] : 0,
-                                      (columns >= 7) ? heights[6] : 0,
-                                      (columns >= 8) ? heights[7] : 0);
+            Height = heights;
         }
     }
     
     internal struct Lock
     {
-        public Vector256<int> Height;
+        public int[] Height;
         
-        public Lock(int columns, int[] heights)
+        public Lock(int[] heights)
         {
-            if (columns > 8)
+            if (heights.Length > 8)
                 throw new NotImplementedException();
 
-            Height = Vector256.Create((columns >= 1) ? heights[0] : int.MaxValue,
-                                      (columns >= 2) ? heights[1] : int.MaxValue,
-                                      (columns >= 3) ? heights[2] : int.MaxValue,
-                                      (columns >= 4) ? heights[3] : int.MaxValue,
-                                      (columns >= 5) ? heights[4] : int.MaxValue,
-                                      (columns >= 6) ? heights[5] : int.MaxValue,
-                                      (columns >= 7) ? heights[6] : int.MaxValue,
-                                      (columns >= 8) ? heights[7] : int.MaxValue);            
+            Height = heights;
         }
 
         public bool DoesKeyFit(Key key)
         {
-            // the height of the lock's free space must be >= the height of the key
-            Vector256<int> comparison_result = Vector256.GreaterThanOrEqual(Height, key.Height);
+            if (Height.Length != key.Height.Length)
+                throw new NotImplementedException();
 
-            // the comparison should yield all zeros in a valid key, signifying that
-            // the height of the lock was greater than or equal to the key for all columns
-            // Vector256 >= will return a -1 for each vector component that meets the 
-            // criteria, so we need to sum to -8 (8 slots for 32-bit int in 256-bit vector)
-            if (Vector256.Sum(comparison_result) == -8)
-                return true;
-            else
-                return false;
+            for (int i = 0; i < Height.Length; i++)
+            {
+                if (Height[i] < key.Height[i])
+                    return false;
+            }
+
+            return true;
         }
     }
 
@@ -112,9 +97,9 @@ namespace Day25_1
 
                             // add our objects to their collections
                             if (char2count == '.') // a lock
-                                locks.Add(new Lock(max_col + 1, heights));
+                                locks.Add(new Lock(heights));
                             else
-                                keys.Add(new Key(max_col + 1, heights));
+                                keys.Add(new Key(heights));
 
                             // clear our input object
                             input_object.Clear();
@@ -150,7 +135,7 @@ namespace Day25_1
                 var exec_timer = System.Diagnostics.Stopwatch.StartNew();
 
                 // try every unique combination
-                foreach (Lock l in locks)
+                foreach(Lock l in locks)
                 {
                     foreach (Key k in keys)
                     {
@@ -158,6 +143,7 @@ namespace Day25_1
                             unique_lock_key_pairs++;
                     }
                 }
+                exec_timer.Stop();
 
                 long nanos_per_tick = (1000L * 1000L * 1000L) / Stopwatch.Frequency;
 
